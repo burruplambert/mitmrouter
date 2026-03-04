@@ -2,9 +2,9 @@
 
 # VARIABLES
 BR_IFACE="br0"
-WAN_IFACE="eth0"
-LAN_IFACE="eth1"
-WIFI_IFACE="wlan0"
+WAN_IFACE="wlp59s0"          # internet Wi‑Fi
+LAN_IFACE="wlx00c0ca916a5a"  # USB Wi‑Fi (on the bridge)
+WIFI_IFACE="wlx00c0ca916a5a" # same as LAN_IFACE, used by hostapd
 WIFI_SSID="setec_astronomy"
 WIFI_PASSWORD="mypassword"
 
@@ -76,6 +76,7 @@ if [ $1 = "up" ]; then
     sudo iptables -A FORWARD -i $BR_IFACE -o $WAN_IFACE -j ACCEPT
     # optional mitm rules
     #sudo iptables -t nat -A PREROUTING -i $BR_IFACE -p tcp -d 1.2.3.4 --dport 443 -j REDIRECT --to-ports 8081
+    sudo iptables -t nat -A PREROUTING -i $BR_IFACE -p tcp -j DNAT --to-destination 192.168.1.20:8888
     
     
     echo "== setting static IP on bridge interface"
